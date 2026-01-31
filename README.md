@@ -1,16 +1,64 @@
-# React + Vite
+# urX - Revenue Traceability for X Creators
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium dashboard for X (Twitter) creators to track monetization stats, analyze revenue efficiency, and visualize growth patterns.
 
-Currently, two official plugins are available:
+![urX Dashboard](https://img.shields.io/badge/React-19-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-4-cyan) ![Vite](https://img.shields.io/badge/Vite-7-purple)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+- **Revenue Tracking** - Manually enter impressions, CPM, engagement, and payout data
+- **Monetization Analyzer** - Visualize effective CPM, revenue per 1M impressions, and growth trends
+- **Interactive Charts** - Built with Recharts for beautiful data visualization
+- **Smooth Animations** - Framer Motion powered entry animations and interactions
+- **Premium Design** - "Oravia" minimal enterprise aesthetic with glassmorphism and technical grid
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **React 19** + Vite
+- **Tailwind CSS v4**
+- **Framer Motion** - Animations
+- **Recharts** - Charts
+- **Lucide React** - Icons
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── TechnicalGrid.jsx    # Background grid pattern
+│   ├── ShimmerButton.jsx    # Animated CTA button
+│   ├── PremiumCard.jsx      # Elevated card component
+│   ├── Navbar.jsx           # Glassmorphism navbar
+│   └── RevenueGraph.jsx     # SVG revenue visualization
+├── sections/
+│   ├── Hero.jsx             # Landing hero section
+│   ├── Tracker.jsx          # Stats input form
+│   └── Dashboard.jsx        # Analytics dashboard
+└── App.jsx                  # Main app component
+```
+
+## 🎨 Design System
+
+| Token | Value |
+|-------|-------|
+| Obsidian | `#111111` |
+| Canvas | `#FAFAFA` |
+| Emerald Accent | `#10B981` |
+| Fonts | Plus Jakarta Sans, Inter, JetBrains Mono |
+
+## 📄 License
+
+MIT
