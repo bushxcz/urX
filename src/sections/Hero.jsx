@@ -52,7 +52,7 @@ export default function Hero() {
                             transition={{ duration: 0.5, delay: 0.3 }}
                             className="flex flex-wrap gap-4 pt-4"
                         >
-                            <ShimmerButton>
+                            <ShimmerButton onClick={() => document.getElementById('tracker')?.scrollIntoView({ behavior: 'smooth' })}>
                                 Start Tracking
                             </ShimmerButton>
                             <a
