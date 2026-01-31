@@ -29,7 +29,7 @@ function App() {
         <Dashboard data={trackerData} />
 
         {/* Footer */}
-        <footer className="border-t border-border-subtle py-12 px-6">
+        <footer className="border-t border-border-subtle py-8 md:py-12 px-4 md:px-6">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-obsidian rounded-lg flex items-center justify-center">

@@ -103,7 +103,7 @@ export default function Dashboard({ data }) {
     };
 
     return (
-        <section id="dashboard" className="relative py-24 px-6">
+        <section id="dashboard" className="relative py-12 md:py-24 px-4 md:px-6">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <motion.div
@@ -111,7 +111,7 @@ export default function Dashboard({ data }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-center mb-16"
+                    className="text-center mb-8 md:mb-16"
                 >
                     <p className="font-serif italic text-subtle text-lg mb-4">
                         Monetization Analyzer
@@ -125,7 +125,7 @@ export default function Dashboard({ data }) {
                 </motion.div>
 
                 {/* Metric Cards */}
-                <div className="grid md:grid-cols-3 gap-6 mb-12">
+                <div className="grid md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
                     {metricCards.map((card, index) => {
                         const Icon = card.icon;
                         const isActive = activeMetric === card.id;
@@ -277,7 +277,7 @@ export default function Dashboard({ data }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.5 }}
-                    className="mt-12 bg-gradient-to-r from-obsidian to-obsidian/90 rounded-2xl p-8 md:p-12"
+                    className="mt-8 md:mt-12 bg-gradient-to-r from-obsidian to-obsidian/90 rounded-2xl p-6 md:p-12"
                 >
                     <div className="grid md:grid-cols-2 gap-8 items-center">
                         <div>

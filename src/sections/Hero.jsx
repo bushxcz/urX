@@ -7,9 +7,9 @@ import RevenueGraph from '../components/RevenueGraph';
  */
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-16 px-6">
+        <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-10 md:pb-16 px-4 md:px-6">
             <div className="max-w-7xl mx-auto w-full">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                     {/* Left Column - Text Content */}
                     <div className="space-y-8">
                         {/* Editorial Accent */}
@@ -68,7 +68,7 @@ export default function Hero() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.5 }}
-                            className="flex gap-12 pt-8 border-t border-border-subtle"
+                            className="flex gap-6 md:gap-12 pt-6 md:pt-8 border-t border-border-subtle"
                         >
                             <div>
                                 <p className="font-data text-2xl md:text-3xl font-semibold text-obsidian">

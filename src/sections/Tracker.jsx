@@ -76,7 +76,7 @@ export default function Tracker({ onSubmit }) {
     ];
 
     return (
-        <section id="tracker" className="relative py-24 px-6">
+        <section id="tracker" className="relative py-12 md:py-24 px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
                 {/* Section Header */}
                 <motion.div
@@ -84,7 +84,7 @@ export default function Tracker({ onSubmit }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-center mb-16"
+                    className="text-center mb-8 md:mb-16"
                 >
                     <p className="font-serif italic text-subtle text-lg mb-4">
                         Input Interface
@@ -103,7 +103,7 @@ export default function Tracker({ onSubmit }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="bg-white rounded-2xl border border-border-subtle shadow-sm p-8 md:p-12"
+                    className="bg-white rounded-2xl border border-border-subtle shadow-sm p-6 md:p-12"
                 >
                     <form onSubmit={handleSubmit}>
                         <div className="grid md:grid-cols-2 gap-6">
