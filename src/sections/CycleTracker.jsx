@@ -190,8 +190,7 @@ export default function CycleTracker({ cycles, onAddCycle, onDeleteCycle }) {
                                     </div>
 
                                     <div className="mt-6 flex justify-end">
-                                        <ShimmerButton type="submit" className="whitespace-nowrap">
-                                            <Plus className="w-4 h-4 mr-2" />
+                                        <ShimmerButton type="submit">
                                             Add
                                         </ShimmerButton>
                                     </div>
