@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { BarChart3, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 /**
@@ -25,9 +25,11 @@ export default function Navbar() {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <a href="#" className="flex items-center gap-3 group">
-                        <div className="w-10 h-10 bg-obsidian rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                            <BarChart3 className="w-5 h-5 text-white" />
-                        </div>
+                        <img
+                            src="/urx-icon.svg"
+                            alt="urX Logo"
+                            className="w-10 h-10 group-hover:scale-105 transition-transform"
+                        />
                         <span className="font-sans font-semibold text-xl text-obsidian">
                             urX
                         </span>
