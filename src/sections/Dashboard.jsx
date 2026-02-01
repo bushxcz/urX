@@ -6,53 +6,75 @@ import PremiumCard from '../components/PremiumCard';
 
 /**
  * Dashboard - Analytics display with cards and charts
+ * Shows demo data initially, switches to user data when available
  */
-export default function Dashboard({ data }) {
+export default function Dashboard({ cycles = [] }) {
     const [activeMetric, setActiveMetric] = useState('cpm');
 
-    // Sample historical data
-    const chartData = [
-        { month: 'Jan', cpm: 1.2, revenue: 890, impressions: 742000 },
-        { month: 'Feb', cpm: 1.4, revenue: 1120, impressions: 800000 },
-        { month: 'Mar', cpm: 1.3, revenue: 980, impressions: 754000 },
-        { month: 'Apr', cpm: 1.6, revenue: 1380, impressions: 862500 },
-        { month: 'May', cpm: 1.8, revenue: 1620, impressions: 900000 },
-        { month: 'Jun', cpm: 1.7, revenue: 1530, impressions: 900000 },
-        { month: 'Jul', cpm: 2.0, revenue: 1900, impressions: 950000 },
-        { month: 'Aug', cpm: 2.2, revenue: 2310, impressions: 1050000 },
-        { month: 'Sep', cpm: 2.1, revenue: 2205, impressions: 1050000 },
-        { month: 'Oct', cpm: 2.4, revenue: 2640, impressions: 1100000 },
-        { month: 'Nov', cpm: 2.6, revenue: 2990, impressions: 1150000 },
-        { month: 'Dec', cpm: 2.8, revenue: 3360, impressions: 1200000 },
+    // Demo data for when user has no cycles
+    const demoData = [
+        { label: 'Jan 1-14', cpm: 1.85, revenue: 450, impressions: 243000 },
+        { label: 'Jan 15-28', cpm: 2.10, revenue: 520, impressions: 248000 },
+        { label: 'Jan 29-Feb 11', cpm: 2.35, revenue: 610, impressions: 260000 },
+        { label: 'Feb 12-25', cpm: 2.50, revenue: 680, impressions: 272000 },
+        { label: 'Feb 26-Mar 11', cpm: 2.84, revenue: 780, impressions: 275000 },
     ];
 
-    // Calculate metrics from data or use defaults
-    const metrics = useMemo(() => {
-        if (data?.impressions && data?.revenue) {
-            const impressions = parseFloat(data.impressions);
-            const revenue = parseFloat(data.revenue);
-            const cpm = (revenue / impressions) * 1000;
-            const revenuePer1M = (revenue / impressions) * 1000000;
+    const isDemo = cycles.length === 0;
 
+    // Transform cycles into chart data format, or use demo
+    const chartData = useMemo(() => {
+        if (isDemo) {
+            return demoData;
+        }
+
+        return cycles.map((cycle, index) => {
+            const cpm = (cycle.revenue / cycle.impressions) * 1000;
             return {
-                cpm: cpm.toFixed(2),
-                revenuePer1M: revenuePer1M.toFixed(0),
-                growthTrend: '+47.2',
-                cpmChange: '+12.5',
-                revenueChange: '+23.1',
-                growthChange: '+8.4',
+                label: `Cycle ${index + 1}`,
+                cpm: parseFloat(cpm.toFixed(2)),
+                revenue: cycle.revenue,
+                impressions: cycle.impressions,
             };
+        });
+    }, [cycles, isDemo]);
+
+    // Calculate metrics from cycles or demo
+    const metrics = useMemo(() => {
+        const dataToUse = isDemo ? demoData : cycles.map(c => ({
+            ...c,
+            cpm: (c.revenue / c.impressions) * 1000
+        }));
+
+        const totalImpressions = dataToUse.reduce((sum, c) => sum + (c.impressions || 0), 0);
+        const totalRevenue = dataToUse.reduce((sum, c) => sum + (c.revenue || 0), 0);
+        const avgCpm = totalImpressions > 0 ? (totalRevenue / totalImpressions) * 1000 : 0;
+        const revenuePer1M = totalImpressions > 0 ? (totalRevenue / totalImpressions) * 1000000 : 0;
+
+        // Calculate growth trend
+        let cpmChange = 0;
+        let revenueChange = 0;
+        if (dataToUse.length >= 2) {
+            const first = dataToUse[0];
+            const last = dataToUse[dataToUse.length - 1];
+            const firstCpm = first.cpm || (first.revenue / first.impressions) * 1000;
+            const lastCpm = last.cpm || (last.revenue / last.impressions) * 1000;
+            cpmChange = firstCpm > 0 ? ((lastCpm - firstCpm) / firstCpm) * 100 : 0;
+            revenueChange = first.revenue > 0 ? ((last.revenue - first.revenue) / first.revenue) * 100 : 0;
         }
 
         return {
-            cpm: '2.84',
-            revenuePer1M: '2840',
-            growthTrend: '+47.2',
-            cpmChange: '+12.5',
-            revenueChange: '+23.1',
-            growthChange: '+8.4',
+            cpm: avgCpm.toFixed(2),
+            revenuePer1M: revenuePer1M.toFixed(0),
+            totalRevenue: totalRevenue.toFixed(2),
+            growthTrend: revenueChange.toFixed(1),
+            cpmChange: cpmChange >= 0 ? `+${cpmChange.toFixed(1)}` : cpmChange.toFixed(1),
+            revenueChange: revenueChange >= 0 ? `+${revenueChange.toFixed(1)}` : revenueChange.toFixed(1),
+            growthChange: revenueChange >= 0 ? `+${revenueChange.toFixed(1)}` : revenueChange.toFixed(1),
+            hasData: !isDemo,
+            isDemo,
         };
-    }, [data]);
+    }, [cycles, isDemo]);
 
     const metricCards = [
         {
@@ -60,7 +82,7 @@ export default function Dashboard({ data }) {
             title: 'Effective CPM',
             value: `$${metrics.cpm}`,
             change: metrics.cpmChange,
-            positive: true,
+            positive: parseFloat(metrics.cpmChange) >= 0,
             icon: DollarSign,
             description: 'Revenue per 1,000 impressions',
         },
@@ -69,18 +91,18 @@ export default function Dashboard({ data }) {
             title: 'Revenue per 1M',
             value: `$${metrics.revenuePer1M}`,
             change: metrics.revenueChange,
-            positive: true,
+            positive: parseFloat(metrics.revenueChange) >= 0,
             icon: BarChart3,
             description: 'Projected revenue per million impressions',
         },
         {
             id: 'growth',
             title: 'Growth Trend',
-            value: `${metrics.growthTrend}%`,
+            value: `${parseFloat(metrics.growthTrend) >= 0 ? '+' : ''}${metrics.growthTrend}%`,
             change: metrics.growthChange,
-            positive: true,
+            positive: parseFloat(metrics.growthTrend) >= 0,
             icon: TrendingUp,
-            description: 'Month-over-month growth rate',
+            description: cycles.length >= 2 ? 'First to last cycle comparison' : 'Add more cycles to see trend',
         },
     ];
 
@@ -113,14 +135,24 @@ export default function Dashboard({ data }) {
                     transition={{ duration: 0.5 }}
                     className="text-center mb-8 md:mb-16"
                 >
-                    <p className="font-serif italic text-subtle text-lg mb-4">
-                        Monetization Analyzer
-                    </p>
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                        <p className="font-serif italic text-subtle text-lg">
+                            {metrics.isDemo ? 'Sample Analytics' : 'Lifetime Stats'}
+                        </p>
+                        {metrics.isDemo && (
+                            <span className="bg-amber-100 text-amber-700 text-xs font-medium px-2.5 py-1 rounded-full">
+                                Demo Data
+                            </span>
+                        )}
+                    </div>
                     <h2 className="text-4xl md:text-5xl font-sans font-semibold text-obsidian mb-4">
-                        Your Revenue Dashboard
+                        {metrics.isDemo ? 'Revenue Dashboard' : 'Your Revenue Dashboard'}
                     </h2>
                     <p className="text-subtle text-lg max-w-xl mx-auto">
-                        Visualize your growth and revenue efficiency with actionable insights.
+                        {metrics.isDemo
+                            ? 'See how your analytics will look. Add your first payout cycle below to see your real stats.'
+                            : `Calculated from ${cycles.length} payout cycle${cycles.length > 1 ? 's' : ''}.`
+                        }
                     </p>
                 </motion.div>
 
@@ -142,15 +174,17 @@ export default function Dashboard({ data }) {
                                     <div className="w-12 h-12 bg-fog rounded-xl flex items-center justify-center">
                                         <Icon className="w-6 h-6 text-obsidian" />
                                     </div>
-                                    <div className={`flex items-center gap-1 text-sm font-medium ${card.positive ? 'text-emerald-accent' : 'text-red-500'
-                                        }`}>
-                                        {card.positive ? (
-                                            <ArrowUpRight className="w-4 h-4" />
-                                        ) : (
-                                            <ArrowDownRight className="w-4 h-4" />
-                                        )}
-                                        {card.change}%
-                                    </div>
+                                    {metrics.hasData && cycles.length >= 2 && (
+                                        <div className={`flex items-center gap-1 text-sm font-medium ${card.positive ? 'text-emerald-accent' : 'text-red-500'
+                                            }`}>
+                                            {card.positive ? (
+                                                <ArrowUpRight className="w-4 h-4" />
+                                            ) : (
+                                                <ArrowDownRight className="w-4 h-4" />
+                                            )}
+                                            {card.change}%
+                                        </div>
+                                    )}
                                 </div>
 
                                 <h3 className="text-subtle text-sm font-medium mb-1">
@@ -182,11 +216,15 @@ export default function Dashboard({ data }) {
                                 <h3 className="font-sans font-medium text-obsidian">
                                     Revenue Trend
                                 </h3>
-                                <p className="text-subtle text-sm">Monthly earnings overview</p>
+                                <p className="text-subtle text-sm">
+                                    {cycles.length > 0 ? 'Your earnings per cycle' : 'Add cycles to see your data'}
+                                </p>
                             </div>
-                            <span className="font-data text-sm text-emerald-accent bg-emerald-accent/10 px-3 py-1 rounded-full">
-                                +156% YoY
-                            </span>
+                            {cycles.length > 0 && (
+                                <span className="font-data text-sm text-emerald-accent bg-emerald-accent/10 px-3 py-1 rounded-full">
+                                    ${cycles.reduce((sum, c) => sum + c.revenue, 0).toLocaleString()} total
+                                </span>
+                            )}
                         </div>
 
                         <div className="h-64">
@@ -200,7 +238,7 @@ export default function Dashboard({ data }) {
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#EAEAEA" />
                                     <XAxis
-                                        dataKey="month"
+                                        dataKey="label"
                                         tick={{ fill: 'rgba(17,17,17,0.6)', fontSize: 12 }}
                                         axisLine={{ stroke: '#EAEAEA' }}
                                     />
@@ -235,11 +273,15 @@ export default function Dashboard({ data }) {
                                 <h3 className="font-sans font-medium text-obsidian">
                                     CPM Evolution
                                 </h3>
-                                <p className="text-subtle text-sm">Cost per mille over time</p>
+                                <p className="text-subtle text-sm">
+                                    {cycles.length > 0 ? 'Cost per mille over time' : 'Add cycles to see your data'}
+                                </p>
                             </div>
-                            <span className="font-data text-sm text-emerald-accent bg-emerald-accent/10 px-3 py-1 rounded-full">
-                                $2.84 avg
-                            </span>
+                            {cycles.length > 0 && (
+                                <span className="font-data text-sm text-emerald-accent bg-emerald-accent/10 px-3 py-1 rounded-full">
+                                    ${metrics.cpm} avg
+                                </span>
+                            )}
                         </div>
 
                         <div className="h-64">
@@ -247,7 +289,7 @@ export default function Dashboard({ data }) {
                                 <LineChart data={chartData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#EAEAEA" />
                                     <XAxis
-                                        dataKey="month"
+                                        dataKey="label"
                                         tick={{ fill: 'rgba(17,17,17,0.6)', fontSize: 12 }}
                                         axisLine={{ stroke: '#EAEAEA' }}
                                     />
@@ -271,39 +313,40 @@ export default function Dashboard({ data }) {
                     </motion.div>
                 </div>
 
-                {/* Insights Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                    className="mt-8 md:mt-12 bg-gradient-to-r from-obsidian to-obsidian/90 rounded-2xl p-6 md:p-12"
-                >
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                        <div>
-                            <h3 className="font-serif italic text-white/60 text-lg mb-2">
-                                AI Insight
-                            </h3>
-                            <p className="text-2xl md:text-3xl font-sans font-medium text-white leading-relaxed">
-                                Your CPM has increased by <span className="text-emerald-accent">133%</span> this year.
-                                Posting between 2-4 PM yields{' '}
-                                <span className="text-emerald-accent">23% higher</span> engagement.
-                            </p>
-                        </div>
-                        <div className="flex md:justify-end">
-                            <div className="bg-white/10 backdrop-blur rounded-xl p-6 max-w-xs">
-                                <p className="text-white/60 text-sm mb-2">Projected Q1 Revenue</p>
-                                <p className="font-data text-4xl font-bold text-white">
-                                    $12,480
-                                </p>
-                                <p className="text-emerald-accent text-sm mt-2 flex items-center gap-1">
-                                    <ArrowUpRight className="w-4 h-4" />
-                                    +34% from current pace
+                {/* Insights Section - Only show if we have data */}
+                {cycles.length > 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                        className="mt-8 md:mt-12 bg-gradient-to-r from-obsidian to-obsidian/90 rounded-2xl p-6 md:p-12"
+                    >
+                        <div className="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 className="font-serif italic text-white/60 text-lg mb-2">
+                                    Your Stats
+                                </h3>
+                                <p className="text-2xl md:text-3xl font-sans font-medium text-white leading-relaxed">
+                                    You've tracked <span className="text-emerald-accent">{cycles.length} cycle{cycles.length > 1 ? 's' : ''}</span> with
+                                    an average CPM of <span className="text-emerald-accent">${metrics.cpm}</span>.
                                 </p>
                             </div>
+                            <div className="flex md:justify-end">
+                                <div className="bg-white/10 backdrop-blur rounded-xl p-6 max-w-xs">
+                                    <p className="text-white/60 text-sm mb-2">Total Revenue</p>
+                                    <p className="font-data text-4xl font-bold text-white">
+                                        ${cycles.reduce((sum, c) => sum + c.revenue, 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </p>
+                                    <p className="text-emerald-accent text-sm mt-2 flex items-center gap-1">
+                                        <ArrowUpRight className="w-4 h-4" />
+                                        {cycles.reduce((sum, c) => sum + c.impressions, 0).toLocaleString()} impressions
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                )}
             </div>
         </section>
     );

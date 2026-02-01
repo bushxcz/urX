@@ -1,18 +1,28 @@
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut, Save } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 /**
- * Navbar - Glassmorphism navbar with logo and navigation
+ * Navbar - Glassmorphism navbar with logo, navigation, and auth controls
  */
-export default function Navbar() {
+export default function Navbar({ onSaveClick }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { user, signOut } = useAuth();
 
     const navLinks = [
         { label: 'Dashboard', href: '#dashboard' },
-        { label: 'Tracker', href: '#tracker' },
-        { label: 'Analytics', href: '#analytics' },
+        { label: 'Tracker', href: '#cycle-tracker' },
+        { label: 'Analytics', href: '#cycle-analytics' },
     ];
+
+    const handleLogout = async () => {
+        try {
+            await signOut();
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
 
     return (
         <motion.nav
@@ -46,12 +56,30 @@ export default function Navbar() {
                                 {link.label}
                             </a>
                         ))}
-                        <a
-                            href="#tracker"
-                            className="bg-obsidian text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-obsidian/90 transition-colors"
-                        >
-                            Get Started
-                        </a>
+
+                        {user ? (
+                            <div className="flex items-center gap-4">
+                                <span className="text-subtle text-sm truncate max-w-[150px]">
+                                    {user.email}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 text-subtle hover:text-red-500 transition-colors text-sm font-medium"
+                                    title="Sign out"
+                                >
+                                    <LogOut className="w-4 h-4" />
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={onSaveClick}
+                                className="flex items-center gap-2 bg-obsidian text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-obsidian/90 transition-colors"
+                            >
+                                <Save className="w-4 h-4" />
+                                Sign In
+                            </button>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -82,13 +110,34 @@ export default function Navbar() {
                                     {link.label}
                                 </a>
                             ))}
-                            <a
-                                href="#tracker"
-                                className="bg-obsidian text-white px-5 py-2.5 rounded-lg text-sm font-medium text-center"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Get Started
-                            </a>
+                            {user ? (
+                                <>
+                                    <span className="text-subtle text-sm py-2 truncate">
+                                        {user.email}
+                                    </span>
+                                    <button
+                                        onClick={() => {
+                                            handleLogout();
+                                            setIsMenuOpen(false);
+                                        }}
+                                        className="flex items-center gap-2 text-red-500 font-medium text-sm py-2"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    onClick={() => {
+                                        onSaveClick?.();
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="flex items-center gap-2 bg-obsidian text-white px-5 py-2.5 rounded-lg text-sm font-medium text-center justify-center"
+                                >
+                                    <Save className="w-4 h-4" />
+                                    Sign In
+                                </button>
+                            )}
                         </div>
                     </motion.div>
                 )}
