@@ -7,7 +7,7 @@ import RevenueGraph from '../components/RevenueGraph';
  */
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-10 md:pb-16 px-4 md:px-6">
+        <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-8 md:pb-10 px-4 md:px-6">
             <div className="max-w-7xl mx-auto w-full">
                 <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                     {/* Left Column - Text Content */}

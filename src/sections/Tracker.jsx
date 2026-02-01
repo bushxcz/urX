@@ -76,7 +76,7 @@ export default function Tracker({ onSubmit }) {
     ];
 
     return (
-        <section id="tracker" className="relative pt-12 md:pt-24 pb-8 md:pb-12 px-4 md:px-6">
+        <section id="tracker" className="relative pt-8 md:pt-12 pb-4 md:pb-8 px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
                 {/* Section Header */}
                 <motion.div

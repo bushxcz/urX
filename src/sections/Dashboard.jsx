@@ -103,7 +103,7 @@ export default function Dashboard({ data }) {
     };
 
     return (
-        <section id="dashboard" className="relative py-12 md:py-24 px-4 md:px-6">
+        <section id="dashboard" className="relative pt-8 md:pt-12 pb-12 md:pb-24 px-4 md:px-6">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <motion.div
