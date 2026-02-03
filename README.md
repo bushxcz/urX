@@ -20,44 +20,7 @@ A premium dashboard for X (Twitter) creators to track monetization stats, analyz
 - **Recharts** - Charts
 - **Lucide React** - Icons
 
-## 🚀 Getting Started
 
-```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-```
-
-## 📁 Project Structure
-
-```
-src/
-├── components/
-│   ├── TechnicalGrid.jsx    # Background grid pattern
-│   ├── ShimmerButton.jsx    # Animated CTA button
-│   ├── PremiumCard.jsx      # Elevated card component
-│   ├── Navbar.jsx           # Glassmorphism navbar
-│   └── RevenueGraph.jsx     # SVG revenue visualization
-├── sections/
-│   ├── Hero.jsx             # Landing hero section
-│   ├── Tracker.jsx          # Stats input form
-│   └── Dashboard.jsx        # Analytics dashboard
-└── App.jsx                  # Main app component
-```
-
-## 🎨 Design System
-
-| Token | Value |
-|-------|-------|
-| Obsidian | `#111111` |
-| Canvas | `#FAFAFA` |
-| Emerald Accent | `#10B981` |
-| Fonts | Plus Jakarta Sans, Inter, JetBrains Mono |
 
 ## 📄 License
 
